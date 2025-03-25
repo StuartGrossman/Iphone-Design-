@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile UI Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .devices-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .iphone {
+            width: 375px;
+            height: 812px;
+            background: #fff;
+            border-radius: 40px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .iphone:hover {
+            transform: translateY(-5px);
+        }
+
+        .iphone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 25px;
+            background: #000;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .iphone::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: #000;
+            border-radius: 5px;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            padding: 40px 20px;
+            overflow-y: auto;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(0);
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(100%);
+        }
+
+        .screen.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(0);
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card {
+            background: var(--card-light);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .button:hover {
+            background: var(--primary-dark);
+        }
+
+        .dark-theme {
+            background: var(--background-dark);
+            color: var(--text-light);
+        }
+
+        .dark-theme .card {
+            background: var(--card-dark);
+        }
+
+        .dark-theme .screen {
+            background: var(--background-dark);
+        }
+
+        .iphone.dark {
+            background: var(--background-dark);
+        }
+
+        .iphone.dark::before,
+        .iphone.dark::after {
+            background: #333;
+        }
+
+        /* New Styles */
+        .payment-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card-number {
+            font-size: 24px;
+            letter-spacing: 2px;
+            margin: 20px 0;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .social-post {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: #ddd;
+        }
+
+        .weather-card {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-card::before {
+            content: '☀️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 48px;
+            opacity: 0.2;
+        }
+
+        .temperature {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .weather-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .fitness-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .dark-theme .stat-item {
+            background: rgba(0,0,0,0.2);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Enhanced Content Styles */
+        .task-list {
+            margin-top: 15px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #007AFF;
+            border-radius: 50%;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .task-checkbox.checked {
+            background: #007AFF;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .transaction-list {
+            margin-top: 15px;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .transaction-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .social-image {
+            width: 100%;
+            height: 200px;
+            background: #ddd;
+            border-radius: 10px;
+            margin: 10px 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .weather-forecast {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 10px 0;
+        }
+
+        .forecast-item {
+            min-width: 100px;
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .workout-list {
+            margin-top: 15px;
+        }
+
+        .workout-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .workout-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .workout-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .dark-theme .task-item,
+        .dark-theme .notification-item,
+        .dark-theme .transaction-item {
+            border-color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .devices-container {
+                padding: 10px;
+            }
+            
+            .iphone {
+                width: 100%;
+                height: 600px;
+            }
+        }
+
+        /* Updated Graph Styles */
+        .graph-container {
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+            padding: 20px 0 40px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) transparent;
+        }
+
+        .graph-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .graph-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .graph-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .dark-theme .graph-container {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .graph-bar {
+            position: absolute;
+            bottom: 40px;
+            width: 25px;
+            border-radius: 12px 12px 0 0;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        .graph-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .dark-theme .graph-bar:hover {
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        .graph-bar.revenue {
+            background: linear-gradient(to top, var(--primary-color), var(--primary-light));
+        }
+
+        .graph-bar.category {
+            background: linear-gradient(to top, var(--secondary-color), var(--secondary-light));
+        }
+
+        .graph-bar.weather {
+            background: linear-gradient(to top, var(--accent-color), var(--accent-light));
+        }
+
+        .graph-bar.fitness {
+            background: linear-gradient(to top, var(--primary-color), var(--primary-light));
+        }
+
+        .graph-bar.task {
+            background: linear-gradient(to top, var(--secondary-color), var(--secondary-light));
+        }
+
+        .graph-label {
+            position: absolute;
+            bottom: 10px;
+            width: 25px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .dark-theme .graph-label {
+            color: var(--text-light);
+        }
+
+        /* Analytics Card Styles */
+        .analytics-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.1) 50%, transparent 55%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .trend-up {
+            color: #4CAF50;
+        }
+
+        .trend-down {
+            color: #FF6B6B;
+        }
+
+        .iphone .screen-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Updated Color Theme */
+        :root {
+            --primary-color: #6366F1;
+            --primary-light: #818CF8;
+            --primary-dark: #4F46E5;
+            --secondary-color: #10B981;
+            --secondary-light: #34D399;
+            --secondary-dark: #059669;
+            --accent-color: #F59E0B;
+            --accent-light: #FBBF24;
+            --accent-dark: #D97706;
+            --background-light: #F9FAFB;
+            --background-dark: #1F2937;
+            --card-light: #FFFFFF;
+            --card-dark: #374151;
+            --text-light: #F9FAFB;
+            --text-dark: #111827;
+        }
+
+        /* Enhanced Icon Styles */
+        .icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .icon:hover {
+            transform: scale(1.1);
+        }
+
+        .icon.task { background: var(--primary-color); }
+        .icon.payment { background: var(--secondary-color); }
+        .icon.social { background: var(--accent-color); }
+        .icon.weather { background: var(--primary-color); }
+        .icon.fitness { background: var(--secondary-color); }
+        .icon.analytics { background: var(--accent-color); }
+
+        /* Enhanced Avatar Styles */
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Enhanced Task Checkbox */
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            margin-right: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .task-checkbox.checked {
+            background: var(--primary-color);
+        }
+
+        .task-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Enhanced Graph Styles */
+        .graph-container {
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+            padding: 20px 0 40px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) transparent;
+        }
+
+        .graph-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .graph-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .graph-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .dark-theme .graph-container {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .graph-bar {
+            position: absolute;
+            bottom: 40px;
+            width: 25px;
+            border-radius: 12px 12px 0 0;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        .graph-bar:hover {
+            opacity: 1;
+            transform: scaleY(1.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .dark-theme .graph-bar:hover {
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        /* Enhanced Card Transitions */
+        .card {
+            transform-origin: center;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        /* Enhanced Button Styles */
+        .button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Enhanced Screen Transitions */
+        .screen {
+            transform-origin: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            transform: translateX(100%) scale(0.95);
+        }
+
+        .screen.visible {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="devices-container">
+        <!-- Task Management App -->
+        <div class="iphone">
+            <div class="screen-container">
+                <div class="screen" id="task-screen-1">
+                    <div class="app-header">
+                        <h2>Task Manager</h2>
+                        <p>Your daily tasks</p>
+                    </div>
+                    <div class="card">
+                        <h3>Today's Tasks</h3>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <div class="task-checkbox"></div>
+                                <div>
+                                    <strong>Complete project presentation</strong>
+                                    <p>Due in 2 hours</p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-checkbox"></div>
+                                <div>
+                                    <strong>Team meeting</strong>
+                                    <p>3:00 PM</p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-checkbox"></div>
+                                <div>
+                                    <strong>Review documents</strong>
+                                    <p>Due tomorrow</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('task-screen-2', 'task')">View Calendar</button>
+                    </div>
+                    <div class="card">
+                        <h3>Notifications</h3>
+                        <div class="notification-item">
+                            <div class="notification-icon icon task">📅</div>
+                            <div>
+                                <strong>Meeting Reminder</strong>
+                                <p>Team sync in 30 minutes</p>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-icon icon payment">📧</div>
+                            <div>
+                                <strong>New Email</strong>
+                                <p>From: Project Manager</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen hidden" id="task-screen-2">
+                    <div class="app-header">
+                        <h2>Calendar</h2>
+                        <p>March 2024</p>
+                    </div>
+                    <div class="card">
+                        <h3>Task Completion Rate</h3>
+                        <div class="graph-container" id="task-graph">
+                            <!-- Task completion graph will be added by JavaScript -->
+                        </div>
+                        <h3>Upcoming Events</h3>
+                        <div class="task-list">
+                            <div class="task-item">
+                                <div class="task-checkbox"></div>
+                                <div>
+                                    <strong>Project Deadline</strong>
+                                    <p>March 30, 2024</p>
+                                </div>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-checkbox"></div>
+                                <div>
+                                    <strong>Team Building</strong>
+                                    <p>April 5, 2024</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('task-screen-1', 'task')">Back to Tasks</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment App -->
+        <div class="iphone">
+            <div class="screen-container">
+                <div class="screen" id="payment-screen-1">
+                    <div class="app-header">
+                        <h2>Payment</h2>
+                        <p>Your balance: $1,234.56</p>
+                    </div>
+                    <div class="payment-card">
+                        <h3>Visa Card</h3>
+                        <div class="card-number">•••• •••• •••• 1234</div>
+                        <div class="card-details">
+                            <span>Expires 12/25</span>
+                            <span>CVV: •••</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Recent Transactions</h3>
+                        <div class="transaction-list">
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon payment">💳</div>
+                                <div>
+                                    <strong>Grocery Store</strong>
+                                    <p>$45.99</p>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon payment">🍽️</div>
+                                <div>
+                                    <strong>Restaurant</strong>
+                                    <p>$32.50</p>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon payment">🚗</div>
+                                <div>
+                                    <strong>Gas Station</strong>
+                                    <p>$28.75</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('payment-screen-2', 'payment')">View Analytics</button>
+                    </div>
+                </div>
+                <div class="screen hidden" id="payment-screen-2">
+                    <div class="app-header">
+                        <h2>Analytics</h2>
+                        <p>Monthly Overview</p>
+                    </div>
+                    <div class="card">
+                        <h3>Spending Categories</h3>
+                        <div class="transaction-list">
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon payment">🏠</div>
+                                <div>
+                                    <strong>Housing</strong>
+                                    <p>$1,500</p>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon payment">🍽️</div>
+                                <div>
+                                    <strong>Food & Dining</strong>
+                                    <p>$450</p>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon payment">🚗</div>
+                                <div>
+                                    <strong>Transportation</strong>
+                                    <p>$200</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('payment-screen-1', 'payment')">Back to Card</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Media Feed -->
+        <div class="iphone dark">
+            <div class="screen-container">
+                <div class="screen dark-theme" id="social-screen-1">
+                    <div class="app-header">
+                        <h2>Social Feed</h2>
+                        <p>Latest updates</p>
+                    </div>
+                    <div class="card">
+                        <div class="social-post">
+                            <div class="avatar">JD</div>
+                            <div>
+                                <strong>John Doe</strong>
+                                <p>Just posted a new photo</p>
+                            </div>
+                        </div>
+                        <div class="social-image" style="background-image: url('https://picsum.photos/400/300')"></div>
+                        <div class="social-post">
+                            <div class="avatar">JS</div>
+                            <div>
+                                <strong>Jane Smith</strong>
+                                <p>Shared a new story</p>
+                            </div>
+                        </div>
+                        <div class="social-image" style="background-image: url('https://picsum.photos/400/301')"></div>
+                        <div class="social-post">
+                            <div class="avatar">MJ</div>
+                            <div>
+                                <strong>Mike Johnson</strong>
+                                <p>Updated their profile</p>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('social-screen-2', 'social')">View Stories</button>
+                    </div>
+                </div>
+                <div class="screen dark-theme hidden" id="social-screen-2">
+                    <div class="app-header">
+                        <h2>Stories</h2>
+                        <p>Your friends' updates</p>
+                    </div>
+                    <div class="card">
+                        <div class="social-post">
+                            <div class="avatar">SW</div>
+                            <div>
+                                <strong>Sarah Wilson</strong>
+                                <p>Added to their story</p>
+                            </div>
+                        </div>
+                        <div class="social-image" style="background-image: url('https://picsum.photos/400/302')"></div>
+                        <div class="social-post">
+                            <div class="avatar">TB</div>
+                            <div>
+                                <strong>Tom Brown</strong>
+                                <p>Added to their story</p>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('social-screen-1', 'social')">Back to Feed</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather App -->
+        <div class="iphone">
+            <div class="screen-container">
+                <div class="screen" id="weather-screen-1">
+                    <div class="app-header">
+                        <h2>Weather</h2>
+                        <p>San Francisco, CA</p>
+                    </div>
+                    <div class="card weather-card">
+                        <h3>Today</h3>
+                        <div class="temperature">72°F</div>
+                        <p>Partly Cloudy</p>
+                        <div class="weather-details">
+                            <div>
+                                <strong>Humidity</strong>
+                                <p>65%</p>
+                            </div>
+                            <div>
+                                <strong>Wind</strong>
+                                <p>8 mph</p>
+                            </div>
+                        </div>
+                        <div class="weather-forecast">
+                            <div class="forecast-item">
+                                <strong>Mon</strong>
+                                <p>68°F</p>
+                            </div>
+                            <div class="forecast-item">
+                                <strong>Tue</strong>
+                                <p>70°F</p>
+                            </div>
+                            <div class="forecast-item">
+                                <strong>Wed</strong>
+                                <p>75°F</p>
+                            </div>
+                            <div class="forecast-item">
+                                <strong>Thu</strong>
+                                <p>69°F</p>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('weather-screen-2', 'weather')">View Details</button>
+                    </div>
+                </div>
+                <div class="screen hidden" id="weather-screen-2">
+                    <div class="app-header">
+                        <h2>Weather Details</h2>
+                        <p>Extended Forecast</p>
+                    </div>
+                    <div class="card">
+                        <h3>Temperature Trend</h3>
+                        <div class="graph-container" id="weather-graph">
+                            <!-- Weather trend graph will be added by JavaScript -->
+                        </div>
+                        <h3>Hourly Forecast</h3>
+                        <div class="weather-forecast">
+                            <div class="forecast-item">
+                                <strong>Now</strong>
+                                <p>72°F</p>
+                            </div>
+                            <div class="forecast-item">
+                                <strong>1PM</strong>
+                                <p>74°F</p>
+                            </div>
+                            <div class="forecast-item">
+                                <strong>2PM</strong>
+                                <p>73°F</p>
+                            </div>
+                            <div class="forecast-item">
+                                <strong>3PM</strong>
+                                <p>71°F</p>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('weather-screen-1', 'weather')">Back to Overview</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fitness Tracker -->
+        <div class="iphone dark">
+            <div class="screen-container">
+                <div class="screen dark-theme" id="fitness-screen-1">
+                    <div class="app-header">
+                        <h2>Fitness</h2>
+                        <p>Daily Activity</p>
+                    </div>
+                    <div class="card">
+                        <h3>Today's Progress</h3>
+                        <div class="fitness-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">8,234</div>
+                                <div class="stat-label">Steps</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">2.4</div>
+                                <div class="stat-label">Miles</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">45</div>
+                                <div class="stat-label">Minutes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">320</div>
+                                <div class="stat-label">Calories</div>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('fitness-screen-2', 'fitness')">View Workouts</button>
+                    </div>
+                    <div class="card">
+                        <h3>Weekly Goals</h3>
+                        <div class="workout-list">
+                            <div class="workout-item">
+                                <div class="workout-icon icon fitness">🏃</div>
+                                <div>
+                                    <strong>Running</strong>
+                                    <p>3 miles completed</p>
+                                </div>
+                            </div>
+                            <div class="workout-item">
+                                <div class="workout-icon icon fitness">💪</div>
+                                <div>
+                                    <strong>Strength Training</strong>
+                                    <p>2 workouts this week</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen dark-theme hidden" id="fitness-screen-2">
+                    <div class="app-header">
+                        <h2>Workouts</h2>
+                        <p>Your exercise history</p>
+                    </div>
+                    <div class="card">
+                        <h3>Weekly Activity</h3>
+                        <div class="graph-container" id="fitness-graph">
+                            <!-- Fitness activity graph will be added by JavaScript -->
+                        </div>
+                        <div class="workout-list">
+                            <div class="workout-item">
+                                <div class="workout-icon icon fitness">🏃</div>
+                                <div>
+                                    <strong>Morning Run</strong>
+                                    <p>3.2 miles, 28 minutes</p>
+                                </div>
+                            </div>
+                            <div class="workout-item">
+                                <div class="workout-icon icon fitness">💪</div>
+                                <div>
+                                    <strong>Upper Body</strong>
+                                    <p>45 minutes, 12 exercises</p>
+                                </div>
+                            </div>
+                            <div class="workout-item">
+                                <div class="workout-icon icon fitness">🚴</div>
+                                <div>
+                                    <strong>Cycling</strong>
+                                    <p>10 miles, 45 minutes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('fitness-screen-1', 'fitness')">Back to Stats</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics App -->
+        <div class="iphone">
+            <div class="screen-container">
+                <div class="screen" id="analytics-screen-1">
+                    <div class="app-header">
+                        <h2>Analytics</h2>
+                        <p>Business Overview</p>
+                    </div>
+                    <div class="card analytics-card">
+                        <h3>Monthly Revenue</h3>
+                        <div class="metric-value">$124,567</div>
+                        <div class="metric-label">
+                            Total Revenue
+                            <span class="trend-indicator trend-up">↑ 12.5%</span>
+                        </div>
+                        <div class="graph-container" id="revenue-graph">
+                            <!-- Graph bars will be added by JavaScript -->
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('analytics-screen-2', 'analytics')">View Details</button>
+                    </div>
+                    <div class="card">
+                        <h3>Key Metrics</h3>
+                        <div class="fitness-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">1,234</div>
+                                <div class="stat-label">Active Users</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">89%</div>
+                                <div class="stat-label">Satisfaction</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">45</div>
+                                <div class="stat-label">New Orders</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Support Tickets</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen hidden" id="analytics-screen-2">
+                    <div class="app-header">
+                        <h2>Analytics Details</h2>
+                        <p>Revenue Breakdown</p>
+                    </div>
+                    <div class="card">
+                        <h3>Revenue by Category</h3>
+                        <div class="graph-container" id="category-graph">
+                            <!-- Category graph bars will be added by JavaScript -->
+                        </div>
+                        <div class="transaction-list">
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon analytics">📊</div>
+                                <div>
+                                    <strong>Enterprise</strong>
+                                    <p>$45,000</p>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon analytics">🏪</div>
+                                <div>
+                                    <strong>Retail</strong>
+                                    <p>$32,500</p>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-icon icon analytics">🏢</div>
+                                <div>
+                                    <strong>Corporate</strong>
+                                    <p>$47,067</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="button" onclick="showDeviceScreen('analytics-screen-1', 'analytics')">Back to Overview</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDeviceScreen(screenId, deviceId) {
+            // Get all screens within the same iPhone device
+            const device = document.querySelector(`#${screenId}`).closest('.iphone');
+            const screens = device.querySelectorAll('.screen');
+            
+            // Hide all screens in this device
+            screens.forEach(screen => {
+                screen.classList.add('hidden');
+                screen.classList.remove('visible');
+            });
+
+            // Show the selected screen
+            const targetScreen = document.getElementById(screenId);
+            targetScreen.classList.remove('hidden');
+            targetScreen.classList.add('visible');
+        }
+
+        // Enhanced graph initialization with tooltips
+        function initializeGraphs() {
+            function createGraphBar(container, data, labels, className, maxValue = 100) {
+                const maxHeight = 150;
+                const spacing = 30;
+                
+                data.forEach((value, index) => {
+                    const bar = document.createElement('div');
+                    bar.className = `graph-bar ${className}`;
+                    bar.style.left = `${index * spacing}px`;
+                    bar.style.height = `${(value / maxValue) * maxHeight}px`;
+                    
+                    // Add tooltip
+                    bar.title = `${labels[index]}: ${value}`;
+                    
+                    const label = document.createElement('div');
+                    label.className = 'graph-label';
+                    label.textContent = labels[index];
+                    label.style.left = `${index * spacing}px`;
+                    
+                    container.appendChild(bar);
+                    container.appendChild(label);
+                });
+            }
+
+            // Revenue graph
+            const revenueData = [60, 85, 45, 75, 90, 65, 80, 95, 70, 85];
+            const revenueLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
+            createGraphBar(document.getElementById('revenue-graph'), revenueData, revenueLabels, 'revenue');
+
+            // Category graph
+            const categoryData = [75, 60, 85, 45, 70];
+            const categoryLabels = ['Enterprise', 'Retail', 'Corporate', 'SMB', 'Other'];
+            createGraphBar(document.getElementById('category-graph'), categoryData, categoryLabels, 'category');
+
+            // Task completion graph
+            const taskData = [85, 70, 90, 65, 80, 75, 95, 85, 80, 90];
+            const taskLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
+            createGraphBar(document.getElementById('task-graph'), taskData, taskLabels, 'task');
+
+            // Weather trend graph
+            const weatherData = [68, 72, 70, 75, 73, 71, 69, 74, 72, 70];
+            const weatherLabels = ['6AM', '9AM', '12PM', '3PM', '6PM', '9PM', '12AM', '3AM', '6AM', '9AM'];
+            createGraphBar(document.getElementById('weather-graph'), weatherData, weatherLabels, 'weather', 80);
+
+            // Fitness activity graph
+            const fitnessData = [45, 60, 30, 75, 45, 90, 60, 45, 75, 60];
+            const fitnessLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
+            createGraphBar(document.getElementById('fitness-graph'), fitnessData, fitnessLabels, 'fitness');
+        }
+
+        // Enhanced checkbox click handler
+        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                this.classList.toggle('checked');
+                // Add ripple effect
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Initialize everything when the page loads
+        window.addEventListener('load', () => {
+            initializeGraphs();
+            // Add initial animation to cards
+            document.querySelectorAll('.card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html> 
