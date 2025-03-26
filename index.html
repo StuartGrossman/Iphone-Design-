@@ -203,9 +203,14 @@
         }
 
         .weather-card {
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            background: var(--weather-gradient);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .weather-card::before {
@@ -424,10 +429,15 @@
             position: relative;
             overflow-x: auto;
             padding: 20px 0 40px 0;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--chart-background);
             border-radius: 12px;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) transparent;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 10px;
         }
 
         .graph-container::-webkit-scrollbar {
@@ -448,23 +458,26 @@
         }
 
         .graph-bar {
-            position: absolute;
-            bottom: 40px;
-            width: 25px;
+            position: relative;
+            width: 40px;
             border-radius: 12px 12px 0 0;
             transition: all 0.3s ease;
             opacity: 0.8;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0;
+            flex: 1;
+            max-width: 60px;
         }
 
         .graph-bar:hover {
             opacity: 1;
             transform: scaleY(1.05);
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .dark-theme .graph-bar:hover {
-            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
         }
 
         .graph-bar.revenue {
@@ -489,12 +502,15 @@
 
         .graph-label {
             position: absolute;
-            bottom: 10px;
-            width: 25px;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-color);
             text-align: center;
-            font-size: 11px;
-            color: var(--text-dark);
             white-space: nowrap;
+            width: max-content;
+            padding: 0 0.2rem;
         }
 
         .dark-theme .graph-label {
@@ -574,6 +590,10 @@
             --card-dark: #374151;
             --text-light: #F9FAFB;
             --text-dark: #111827;
+            --weather-gradient: linear-gradient(135deg, #4F46E5, #6366F1);
+            --credit-card-gradient: linear-gradient(135deg, #1E293B, #334155);
+            --chart-background: rgba(99, 102, 241, 0.1);
+            --chart-background-dark: rgba(99, 102, 241, 0.2);
         }
 
         /* Enhanced Icon Styles */
@@ -650,98 +670,219 @@
             position: relative;
             overflow-x: auto;
             padding: 20px 0 40px 0;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--chart-background);
             border-radius: 12px;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) transparent;
-        }
-
-        .graph-container::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .graph-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .graph-container::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-
-        .dark-theme .graph-container {
-            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
         }
 
         .graph-bar {
-            position: absolute;
-            bottom: 40px;
-            width: 25px;
+            position: relative;
+            width: 40px;
             border-radius: 12px 12px 0 0;
             transition: all 0.3s ease;
             opacity: 0.8;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0 5px;
         }
 
-        .graph-bar:hover {
-            opacity: 1;
-            transform: scaleY(1.05);
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        .graph-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-color);
+            text-align: center;
+            white-space: nowrap;
+            width: max-content;
+            padding: 0 0.2rem;
         }
 
-        .dark-theme .graph-bar:hover {
-            box-shadow: 0 0 10px rgba(255,255,255,0.1);
-        }
-
-        /* Enhanced Card Transitions */
-        .card {
-            transform-origin: center;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px) scale(1.01);
-        }
-
-        /* Enhanced Button Styles */
-        .button {
-            position: relative;
+        .social-video {
+            width: 100%;
+            height: 300px;
+            border-radius: 12px;
+            margin: 15px 0;
             overflow: hidden;
-            transition: all 0.3s ease;
+            position: relative;
+            background: #000;
         }
 
-        .button::after {
-            content: '';
+        .social-video iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .video-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .video-controls button:hover {
+            transform: scale(1.1);
+        }
+
+        .video-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            width: 100%;
+        }
+
+        .video-progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .social-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 12px;
+            margin: 15px 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Enhanced Weather Animations */
+        .weather-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 15px;
+            z-index: 1;
+        }
+
+        .weather-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .sun-rays {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
             transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
+            width: 200%;
+            height: 200%;
+            animation: rotate 20s linear infinite;
         }
 
-        .button:hover::after {
-            width: 300px;
-            height: 300px;
+        .sun-ray {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 200%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+            transform-origin: bottom;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
-        /* Enhanced Screen Transitions */
-        .screen {
-            transform-origin: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .cloud {
+            position: absolute;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: float 4s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
 
-        .screen.hidden {
-            opacity: 0;
-            transform: translateX(100%) scale(0.95);
+        .rain-drop {
+            position: absolute;
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+            animation: rain 1s linear infinite;
+            box-shadow: 0 0 8px rgba(255,255,255,0.4);
         }
 
-        .screen.visible {
-            opacity: 1;
-            transform: translateX(0) scale(1);
+        .snowflake {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            animation: snow 3s linear infinite;
+            box-shadow: 0 0 8px rgba(255,255,255,0.6);
+        }
+
+        .lightning {
+            position: absolute;
+            width: 3px;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            animation: lightning 0.5s ease-out;
+            box-shadow: 0 0 30px rgba(255,255,255,0.9);
+        }
+
+        @keyframes lightning {
+            0% { opacity: 0; transform: translateX(-50%) scaleY(0); }
+            50% { opacity: 1; transform: translateX(-50%) scaleY(1); }
+            100% { opacity: 0; transform: translateX(-50%) scaleY(0); }
+        }
+
+        @keyframes weatherFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-15px) translateX(5px); }
+        }
+
+        @keyframes rain {
+            0% { transform: translateY(-100%) rotate(15deg); }
+            100% { transform: translateY(100%) rotate(15deg); }
+        }
+
+        @keyframes snow {
+            0% { transform: translateY(-100%) rotate(0deg); }
+            100% { transform: translateY(100%) rotate(360deg); }
+        }
+
+        .category-graph {
+            height: 150px;
+            padding: 10px 0 30px 0;
         }
     </style>
 </head>
@@ -926,10 +1067,20 @@
                             <div class="avatar">JD</div>
                             <div>
                                 <strong>John Doe</strong>
-                                <p>Just posted a new photo</p>
+                                <p>Just posted a new video</p>
                             </div>
                         </div>
-                        <div class="social-image" style="background-image: url('https://picsum.photos/400/300')"></div>
+                        <div class="social-video">
+                            <iframe 
+                                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&loop=1&playlist=dQw4w9WgXcQ&controls=0&rel=0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                            <div class="video-controls">
+                                <button onclick="togglePlay(this)">▶️</button>
+                                <button onclick="toggleMute(this)">🔊</button>
+                            </div>
+                        </div>
                         <div class="social-post">
                             <div class="avatar">JS</div>
                             <div>
@@ -984,9 +1135,10 @@
                         <p>San Francisco, CA</p>
                     </div>
                     <div class="card weather-card">
+                        <div class="weather-animation" id="weatherAnimation"></div>
                         <h3>Today</h3>
                         <div class="temperature">72°F</div>
-                        <p>Partly Cloudy</p>
+                        <p id="weatherCondition">Partly Cloudy</p>
                         <div class="weather-details">
                             <div>
                                 <strong>Humidity</strong>
@@ -1244,53 +1396,108 @@
 
         // Enhanced graph initialization with tooltips
         function initializeGraphs() {
-            function createGraphBar(container, data, labels, className, maxValue = 100) {
-                const maxHeight = 150;
-                const spacing = 30;
+            // Revenue graph - Monthly revenue data in thousands
+            const revenueData = [85, 92, 78, 105, 98, 112, 95, 108, 102, 115, 125, 118];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const revenueContainer = document.querySelector('#revenue-graph');
+            revenueContainer.innerHTML = '';
+            
+            const maxRevenue = Math.max(...revenueData);
+            months.forEach((month, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'graph-bar revenue';
+                bar.style.height = `${(revenueData[index] / maxRevenue) * 100}%`;
+                bar.title = `$${revenueData[index]}K`;
                 
-                data.forEach((value, index) => {
-                    const bar = document.createElement('div');
-                    bar.className = `graph-bar ${className}`;
-                    bar.style.left = `${index * spacing}px`;
-                    bar.style.height = `${(value / maxValue) * maxHeight}px`;
-                    
-                    // Add tooltip
-                    bar.title = `${labels[index]}: ${value}`;
-                    
-                    const label = document.createElement('div');
-                    label.className = 'graph-label';
-                    label.textContent = labels[index];
-                    label.style.left = `${index * spacing}px`;
-                    
-                    container.appendChild(bar);
-                    container.appendChild(label);
-                });
-            }
+                const label = document.createElement('div');
+                label.className = 'graph-label';
+                label.textContent = month;
+                
+                revenueContainer.appendChild(bar);
+                revenueContainer.appendChild(label);
+            });
 
-            // Revenue graph
-            const revenueData = [60, 85, 45, 75, 90, 65, 80, 95, 70, 85];
-            const revenueLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
-            createGraphBar(document.getElementById('revenue-graph'), revenueData, revenueLabels, 'revenue');
+            // Category graph - Revenue distribution
+            const categoryData = [45, 25, 20, 7, 3];
+            const categories = ['Enterprise', 'Retail', 'Corporate', 'SMB', 'Other'];
+            const categoryContainer = document.querySelector('#category-graph');
+            categoryContainer.innerHTML = '';
+            
+            categories.forEach((category, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'graph-bar category';
+                bar.style.height = `${categoryData[index]}%`;
+                bar.title = `${categoryData[index]}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'graph-label';
+                label.textContent = category;
+                
+                categoryContainer.appendChild(bar);
+                categoryContainer.appendChild(label);
+            });
 
-            // Category graph
-            const categoryData = [75, 60, 85, 45, 70];
-            const categoryLabels = ['Enterprise', 'Retail', 'Corporate', 'SMB', 'Other'];
-            createGraphBar(document.getElementById('category-graph'), categoryData, categoryLabels, 'category');
+            // Fitness activity graph - Weekly workout minutes
+            const fitnessData = [45, 60, 30, 75, 45, 90, 60, 45, 75, 60];
+            const fitnessLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
+            const fitnessContainer = document.getElementById('fitness-graph');
+            fitnessContainer.innerHTML = '';
+            
+            const maxFitness = Math.max(...fitnessData);
+            fitnessData.forEach((value, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'graph-bar fitness';
+                bar.style.height = `${(value / maxFitness) * 100}%`;
+                bar.title = `${value} min`;
+                
+                const label = document.createElement('div');
+                label.className = 'graph-label';
+                label.textContent = fitnessLabels[index];
+                
+                fitnessContainer.appendChild(bar);
+                fitnessContainer.appendChild(label);
+            });
 
             // Task completion graph
             const taskData = [85, 70, 90, 65, 80, 75, 95, 85, 80, 90];
             const taskLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
-            createGraphBar(document.getElementById('task-graph'), taskData, taskLabels, 'task');
+            const taskContainer = document.getElementById('task-graph');
+            taskContainer.innerHTML = '';
+            
+            taskData.forEach((value, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'graph-bar task';
+                bar.style.height = `${value}%`;
+                bar.title = `${value}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'graph-label';
+                label.textContent = taskLabels[index];
+                
+                taskContainer.appendChild(bar);
+                taskContainer.appendChild(label);
+            });
 
             // Weather trend graph
             const weatherData = [68, 72, 70, 75, 73, 71, 69, 74, 72, 70];
             const weatherLabels = ['6AM', '9AM', '12PM', '3PM', '6PM', '9PM', '12AM', '3AM', '6AM', '9AM'];
-            createGraphBar(document.getElementById('weather-graph'), weatherData, weatherLabels, 'weather', 80);
-
-            // Fitness activity graph
-            const fitnessData = [45, 60, 30, 75, 45, 90, 60, 45, 75, 60];
-            const fitnessLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'];
-            createGraphBar(document.getElementById('fitness-graph'), fitnessData, fitnessLabels, 'fitness');
+            const weatherContainer = document.getElementById('weather-graph');
+            weatherContainer.innerHTML = '';
+            
+            const maxTemp = Math.max(...weatherData);
+            weatherData.forEach((value, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'graph-bar weather';
+                bar.style.height = `${(value / maxTemp) * 100}%`;
+                bar.title = `${value}°F`;
+                
+                const label = document.createElement('div');
+                label.className = 'graph-label';
+                label.textContent = weatherLabels[index];
+                
+                weatherContainer.appendChild(bar);
+                weatherContainer.appendChild(label);
+            });
         }
 
         // Enhanced checkbox click handler
@@ -1316,6 +1523,156 @@
                 }, index * 100);
             });
         });
+
+        // Video player functionality
+        function togglePlay(button) {
+            const iframe = button.closest('.social-video').querySelector('iframe');
+            const videoId = iframe.src.split('/').pop().split('?')[0];
+            const player = new YT.Player(iframe);
+            
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+                button.textContent = '▶️';
+            } else {
+                player.playVideo();
+                button.textContent = '⏸️';
+            }
+        }
+
+        function toggleMute(button) {
+            const iframe = button.closest('.social-video').querySelector('iframe');
+            const player = new YT.Player(iframe);
+            
+            if (player.isMuted()) {
+                player.unMute();
+                button.textContent = '🔊';
+            } else {
+                player.mute();
+                button.textContent = '🔈';
+            }
+        }
+
+        // Load YouTube API
+        function loadYouTubeAPI() {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGraphs();
+            initializeWeather();
+            loadYouTubeAPI();
+        });
+
+        function initializeWeather() {
+            const weatherConditions = [
+                { icon: '☀️', condition: 'Sunny', animation: 'sunny' },
+                { icon: '🌤️', condition: 'Partly Cloudy', animation: 'partlyCloudy' },
+                { icon: '☁️', condition: 'Cloudy', animation: 'cloudy' },
+                { icon: '🌧️', condition: 'Rainy', animation: 'rainy' },
+                { icon: '⛈️', condition: 'Stormy', animation: 'stormy' },
+                { icon: '❄️', condition: 'Snowy', animation: 'snowy' }
+            ];
+
+            const weatherAnimation = document.getElementById('weatherAnimation');
+            const weatherCondition = document.getElementById('weatherCondition');
+
+            function setWeather(condition) {
+                weatherCondition.textContent = condition.condition;
+                weatherAnimation.innerHTML = '';
+
+                switch(condition.animation) {
+                    case 'sunny':
+                        const sunRays = document.createElement('div');
+                        sunRays.className = 'sun-rays';
+                        for(let i = 0; i < 12; i++) {
+                            const ray = document.createElement('div');
+                            ray.className = 'sun-ray';
+                            ray.style.transform = `rotate(${i * 30}deg)`;
+                            sunRays.appendChild(ray);
+                        }
+                        weatherAnimation.appendChild(sunRays);
+                        break;
+
+                    case 'partlyCloudy':
+                        for(let i = 0; i < 3; i++) {
+                            const cloud = document.createElement('div');
+                            cloud.className = 'cloud';
+                            cloud.style.width = `${40 + i * 15}px`;
+                            cloud.style.height = `${25 + i * 8}px`;
+                            cloud.style.left = `${20 + i * 25}%`;
+                            cloud.style.top = `${20 + i * 15}%`;
+                            cloud.style.animationDelay = `${i * 0.5}s`;
+                            weatherAnimation.appendChild(cloud);
+                        }
+                        break;
+
+                    case 'cloudy':
+                        for(let i = 0; i < 5; i++) {
+                            const cloud = document.createElement('div');
+                            cloud.className = 'cloud';
+                            cloud.style.width = `${50 + i * 15}px`;
+                            cloud.style.height = `${30 + i * 10}px`;
+                            cloud.style.left = `${10 + i * 18}%`;
+                            cloud.style.top = `${10 + i * 20}%`;
+                            cloud.style.animationDelay = `${i * 0.3}s`;
+                            weatherAnimation.appendChild(cloud);
+                        }
+                        break;
+
+                    case 'rainy':
+                        for(let i = 0; i < 30; i++) {
+                            const drop = document.createElement('div');
+                            drop.className = 'rain-drop';
+                            drop.style.left = `${Math.random() * 100}%`;
+                            drop.style.animationDelay = `${Math.random() * 2}s`;
+                            weatherAnimation.appendChild(drop);
+                        }
+                        break;
+
+                    case 'stormy':
+                        for(let i = 0; i < 40; i++) {
+                            const drop = document.createElement('div');
+                            drop.className = 'rain-drop';
+                            drop.style.left = `${Math.random() * 100}%`;
+                            drop.style.animationDelay = `${Math.random() * 1}s`;
+                            weatherAnimation.appendChild(drop);
+                        }
+                        // Add lightning effect
+                        setInterval(() => {
+                            const lightning = document.createElement('div');
+                            lightning.className = 'lightning';
+                            lightning.style.left = `${Math.random() * 100}%`;
+                            weatherAnimation.appendChild(lightning);
+                            setTimeout(() => lightning.remove(), 500);
+                        }, 3000);
+                        break;
+
+                    case 'snowy':
+                        for(let i = 0; i < 30; i++) {
+                            const snowflake = document.createElement('div');
+                            snowflake.className = 'snowflake';
+                            snowflake.style.left = `${Math.random() * 100}%`;
+                            snowflake.style.animationDelay = `${Math.random() * 3}s`;
+                            weatherAnimation.appendChild(snowflake);
+                        }
+                        break;
+                }
+            }
+
+            // Set initial weather
+            setWeather(weatherConditions[0]);
+
+            // Change weather every 5 seconds
+            let currentIndex = 0;
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % weatherConditions.length;
+                setWeather(weatherConditions[currentIndex]);
+            }, 5000);
+        }
     </script>
 </body>
 </html> 
